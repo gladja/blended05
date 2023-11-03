@@ -4,14 +4,21 @@ import { Comment } from "../Comment/Comment";
 import { Grid } from "../Grid/Grid";
 // import { comments } from "../../helpers/comments";
 import { useGetCommentsQuery } from "../../redux/commentApi";
+import { useSelector } from "react-redux";
+import {selectFilter} from "../../redux/filterSlice"
 
 export const Comments = () => {
   const { data: comments, isLoading } = useGetCommentsQuery();
+  const filter = useSelector(selectFilter)
+
+  const filteredComments = () => 
+   comments.filter(({content}) => content.toLowerCase().includes(filter.toLowerCase()))
+  
 
   return (
     <Grid>
       {comments &&
-        comments.map((comment) => <Comment key={comment.id} {...comment} />)}
+        filteredComments().map((comment) => <Comment key={comment.id} {...comment} />)}
     </Grid>
   );
 };
